@@ -65,8 +65,11 @@ class Withdraw < ActiveRecord::Base
     end
 
     event :reject do
-      transitions from: %i[submitted accepted], to: :rejected
-      after :unlock_funds
+      transitions from: %i[submitted accepted confirming], to: :rejected
+      after do
+        unlock_funds
+        record_cancel_operations!
+      end
     end
 
     event :process do
@@ -74,9 +77,20 @@ class Withdraw < ActiveRecord::Base
       after :send_coins!
     end
 
+    event :load do
+      transitions from: :accepted, to: :confirming do
+        guard do
+          txid?
+        end
+      end
+    end
+
     event :dispatch do
-      # TODO: add validations that txid and block_number are not blank.
-      transitions from: :processing, to: :confirming
+      transitions from: :processing, to: :confirming do
+        guard do
+          coin? ? txid? : true
+        end
+      end
     end
 
     event :success do
