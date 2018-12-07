@@ -117,7 +117,9 @@ class Currency < ActiveRecord::Base
   end
 
   nested_attr \
-    :erc20_contract_address
+    :erc20_contract_address,
+    :gas_limit,
+    :gas_price
 
   def disabled?
     !enabled

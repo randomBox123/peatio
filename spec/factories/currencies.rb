@@ -55,6 +55,10 @@ FactoryBot.define do
       withdraw_limit_24h   { 0.1 }
       withdraw_limit_72h   { 1 }
       withdraw_fee         { 0.025 }
+      options do
+        { gas_limit: 21_000,
+          gas_price: 1_000_000_000 }
+      end
     end
 
     trait :xrp do
@@ -77,8 +81,11 @@ FactoryBot.define do
       withdraw_limit_24h   { 100 }
       withdraw_limit_72h   { 1000 }
       withdraw_fee         { 0.025 }
-      options \
-        { { erc20_contract_address:           '0x87099adD3bCC0821B5b151307c147215F839a110' } }
+      options do
+        { gas_limit: 90_000,
+          gas_price: 1_000_000_000,
+          erc20_contract_address: '0x87099adD3bCC0821B5b151307c147215F839a110' }
+      end
     end
 
     trait :bch do
